@@ -5,19 +5,27 @@ import PreProcessing.emoticonDirectory as emot
 # import acronymDictionary as acrn
 # import emoticonDirectory as emot
 import pypyodbc
+import json
+from pymongo import MongoClient
+import re
 from nltk.tokenize import TweetTokenizer
 
 import PreProcessing.acronymDictionary as acrn
 
 if __name__ == "__main__":
-    con = pypyodbc.connect(Trusted_Connection='yes', driver='{SQL Server}', server='DESKTOP-M6FNGC5',
-                           database='MovieSystemDB', Uid='sa', Pwd='1234')
-    cursor = con.cursor()
-    cursor.execute("SELECT Id,Comment FROM Reviews WHERE IsPreprocessed='FALSE' ")
-    # cursor.execute("SELECT CommentId,Comment FROM Actor where Id='4'")
+    # con = pypyodbc.connect(Trusted_Connection='yes', driver='{SQL Server}', server='DESKTOP-M6FNGC5',
+    #                        database='MovieSystemDB', Uid='sa', Pwd='1234')
+    client = MongoClient( 'mongodb://localhost:27017/' )
+    db = client.MovieSystemDB
+
+    Twitter_User_Comments=db.get_collection("Twitter_User_Comments")
+    # cursor.execute("SELECT Id,Comment FROM Reviews WHERE IsPreprocessed='FALSE' ")
+
+
     filtered_sentence = []
     # print(con)
-    for row in cursor.fetchall():
+    # for row in cursor.fetchall():
+    for movie in Twitter_User_Comments.find():
         # print(row)
         id = str(row[0])
         tweet=str(row[1])

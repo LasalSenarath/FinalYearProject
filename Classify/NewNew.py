@@ -86,7 +86,7 @@ technology =0
 theme =0
 other =0
 
-sentence = "picture qulity is fantastic "
+sentence = "nice acting"
 sentence = sentence.lower()
 words = sentence.split(' ')
 
@@ -294,6 +294,6 @@ print( 'Other: ' + str( float( other ) / len( words ) ) )
 print("Decission Classifier accuracy",(nltk.classify.accuracy(decision_classifier,train_set))*100)
 # classifier classifierSK LSVS_classifier Random_classifier decision_classifier
 
-# new_classifier=NewClassifier(classifier,classifierSK,LSVS_classifier,Random_classifier,decision_classifier)
+# # new_classifier=NewClassifier(classifier,classifierSK,LSVS_classifier,Random_classifier,decision_classifier)
 new_classifier=NewClassifier(Random_classifier,decision_classifier)
 print("new classifier accuracy",((nltk.classify.accuracy(new_classifier,train_set))*100))
