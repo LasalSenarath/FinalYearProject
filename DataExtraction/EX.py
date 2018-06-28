@@ -1,25 +1,27 @@
-import re
-import PreProcessing.emojiDictionary as emoji
-# import PreProcessing.emoticonDictionary as emot
-import PreProcessing.emoticonDirectory as emot
-# import acronymDictionary as acrn
-# import emoticonDirectory as emot
-import pypyodbc
-import json
+from requests import get
+from bs4 import BeautifulSoup
 from pymongo import MongoClient
 import re
-from nltk.tokenize import TweetTokenizer
 
-import PreProcessing.acronymDictionary as acrn
 
-if __name__ == "__main__":
 
-    client = MongoClient( 'mongodb://localhost:27017/' )
-    db = client.MovieSystemDB
+def get_movie_basic_details(movieid):
+    Id=movieid
+    url = "https://www.imdb.com/title/tt"+Id+"/"
+    response = get( url )
+    soup = BeautifulSoup( response.content, 'lxml' )
+    movieName = soup.findAll( "div", {"class": "title_wrapper"} )[0].h1.text
+    movieName = re.sub( r"\d+", " ", movieName )
+    movieName = re.sub( r"[\(\)\n\t ]", " ", movieName ).strip()
+    thumbnail = soup.find( "div", {"class": "poster"} ).find( 'img' )['src']
+    thumbnail = re.sub( r"http.*/images/M/", "", thumbnail )
+    video = soup.find( "div", {"class": "slate"} ).find( 'a' )['href']
+    video1 = re.sub( r"\?.*", "", video )
+    video2=re.sub( r".*vi(\d+)", r"\1", video1 )
+    print(movieName)
+    print(thumbnail)
+    print(video2)
+# print("Updated All Movie Details...")
+get_movie_basic_details("1340138")
 
-    Twitter_User_Comments=db.get_collection("Twitter_User_Comments")
-
-    for movie in Twitter_User_Comments.find():
-        _id = movie['_id']
-        Twitter_User_Comments.update_one( {'_id': _id}, {"$unset": {'PreprocessedComment':1}}, upsert=False )
-        print( movie )
+# https://www.imdb.com/title/tt2560140/videoplayer/vi1401073433

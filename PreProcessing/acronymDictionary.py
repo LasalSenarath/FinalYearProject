@@ -38,6 +38,7 @@ def select_acronym(x):
         "vbg": 'very big',
         "wywh": 'wish you were here',
         "xoxo": 'hugh and kisses',
-        "wtf": 'bad'
+        "wtf": 'bad',
+        "😍":'happy'
 
     }.get(x, x)

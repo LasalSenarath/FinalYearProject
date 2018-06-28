@@ -20,7 +20,7 @@ def get_tweeter_reviews():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
     auth.set_access_token(access_token, access_token_secret)
     twitter_api = tweepy.API(auth)
-    search_results = tweepy.Cursor(twitter_api.search, q="#GetOut-filter:retweets‏", lang="en",result_type="mixed").items(1000)
+    search_results = tweepy.Cursor(twitter_api.search, q="#Actor-filter:retweets‏", lang="en",result_type="mixed").items(1000)
 
     coll = db.get_collection( "Twitter_User_Comments" )
     reviews=[]

@@ -4,19 +4,13 @@ from bs4 import BeautifulSoup
 from pymongo import MongoClient
 import re
 
+#user reviews from IMDb
 client = MongoClient( 'mongodb://localhost:27017/' )
 db = client.MovieSystemDB
-
 url = 'https://www.imdb.com/title/tt5052448/reviews?ref_=tt_ql_3'
-
 response = get( url )
-
 html_soup = BeautifulSoup( response.content, 'lxml' )
-
-
-
 movie_containers = html_soup.find_all( 'div', class_='lister-list' )
-
 def get_movie_reviews():
     movie_title = html_soup.find_all( 'div', class_='parent' )[0].h3.a.text
     movie_Url = "https://www.imdb.com/" + html_soup.find_all( 'div', class_='parent' )[0].h3.a["href"]
@@ -25,8 +19,6 @@ def get_movie_reviews():
     relesed_Year = re.sub( r".*(\d{4}).*", r"\1", relesed_Year )
     movie_container = html_soup.find( 'div', class_='lister-list' )
     user_reviews = movie_container.find_all( 'div', class_='imdb-user-review' )
-
-
     reviews=[]
     coll = db.get_collection( "IMDb_User_Review" )
     id = 0
@@ -45,16 +37,12 @@ def get_movie_reviews():
             'review': review
         }
         reviews.append(data)
-
-    movie_Deatils={
+    movie_Details={
         'movie_title': movie_title,
         'movie_Url': movie_Url,
         'relesed_Year': relesed_Year,
         'user_reviews':reviews
     }
-
-    coll.insert_one(movie_Deatils)
-
+    coll.insert_one(movie_Details)
 print("Entered...")
-
 get_movie_reviews()
